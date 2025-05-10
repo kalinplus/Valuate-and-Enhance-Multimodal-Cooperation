@@ -4,8 +4,8 @@ import csv
 train_videos = './tiny-Kinetics-400/annotations/tiny_train.csv'
 test_videos = './tiny-Kinetics-400/annotations/tiny_val.csv'
 
-train_audio_dir = './tiny-Kinetics-400-audio/train-set'
-test_audio_dir = './tiny-Kinetics-400-audio/test-set'
+train_audio_dir = './tiny-Kinetics-400-audio/train_set'
+test_audio_dir = './tiny-Kinetics-400-audio/test_set'
 
 '''
 数据长这样：
@@ -27,10 +27,10 @@ with open(test_videos, 'r') as f:
         category = row[0].replace(' ', '_')
         filename = row[1] + '_' + row[2].zfill(6) + '_' + row[3].zfill(6)
         mp4_filename = os.path.join('.\\tiny-Kinetics-400-data\\', category, filename + '.mp4')
-        wav_filename = os.path.join('.\\tiny-Kinetics-400-audio\\test-set', filename + '.wav')
-        # ! 与 process.audio.py 期望的目录结构搭配，所有文件都保存在 test-set 下
+        wav_filename = os.path.join('.\\tiny-Kinetics-400-audio\\test_set', filename + '.wav')
+        # ! 与 process.audio.py 期望的目录结构搭配，所有文件都保存在 test_set 下
         # ffmpeg 不支持创建多级目录/文件，想要保持原有目录结构就先创建
-        # category_path = os.path.join('.\\tiny-Kinetics-400-audio\\test-set', category)
+        # category_path = os.path.join('.\\tiny-Kinetics-400-audio\\test_set', category)
         # if not os.path.exists(category_path):
         #     os.makedirs(category_path)
         if os.path.exists(wav_filename):
@@ -51,9 +51,9 @@ with open(train_videos, 'r') as f:
         category = row[0].replace(' ', '_')
         filename = row[1] + '_' + row[2].zfill(6) + '_' + row[3].zfill(6)
         mp4_filename = os.path.join('.\\tiny-Kinetics-400-data\\', category, filename + '.mp4')
-        wav_filename = os.path.join('.\\tiny-Kinetics-400-audio\\train-set', category, filename + '.wav')
-        # ! 与 process.audio.py 期望的目录结构搭配，所有文件都保存在 train-set 下
-        # category_path = os.path.join('.\\tiny-Kinetics-400-audio\\train-set', category)
+        wav_filename = os.path.join('tiny-Kinetics-400-audio/train_set', filename + '.wav')
+        # ! 与 process.audio.py 期望的目录结构搭配，所有文件都保存在 train_set 下
+        # category_path = os.path.join('.\\tiny-Kinetics-400-audio\\train_set', category)
         # if not os.path.exists(category_path):
         #     os.makedirs(category_path)
         if os.path.exists(wav_filename):
