@@ -137,9 +137,13 @@ def main():
   model.cuda()
 
   # 准备数据集
-  train_dataset = AV_KS_Dataset(mode='train',loader=args.loader)
-  train_val_dataset = AV_KS_Dataset(mode='train',loader=args.loader)
-  test_dataset = AV_KS_Dataset(mode='test',loader=args.loader)
+  # TODO: 如果可以，提供一下 transforms 看看数据增强的效果如何
+  # train_dataset = AV_KS_Dataset(mode='train',loader=args.loader)
+  # train_val_dataset = AV_KS_Dataset(mode='train',loader=args.loader)
+  # test_dataset = AV_KS_Dataset(mode='test',loader=args.loader)
+  train_dataset = AV_KS_Dataset(mode='train')
+  train_val_dataset = AV_KS_Dataset(mode='train')
+  test_dataset = AV_KS_Dataset(mode='test')
   
 
   # 加载 dataloader

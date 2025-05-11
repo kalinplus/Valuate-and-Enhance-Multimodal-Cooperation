@@ -20,19 +20,19 @@ class AV_KS_Dataset(Dataset):
         # 训练、验证、测试集的数据路径设定
         # train, val, test 的 visual_path 都是相同的，但是 csv_path 不同，对应读取的数据应该也不同
         if mode=='train':
-            csv_path = '..\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_train.csv'
-            self.audio_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\train_spec'
-            self.visual_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
+            csv_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_train.csv'
+            self.audio_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\train_spec'
+            self.visual_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
 
         elif mode=='val':
-            csv_path = '..\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_val.csv'
-            self.audio_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\test_spec'
-            self.visual_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
+            csv_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_val.csv'
+            self.audio_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\test_spec'
+            self.visual_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
 
         else:
-            csv_path = '..\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_val.csv'
-            self.audio_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\test_spec'
-            self.visual_path = '..\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
+            csv_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-kinetics-400\\annotations\\tiny_val.csv'
+            self.audio_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-audio\\test_spec'
+            self.visual_path = 'G:\\research\\paper_repeat\\Valuate-and-Enhance-Multimodal-Cooperation\\code\\data\\tiny-Kinetics-400\\tiny-Kinetics-400-30fps-frames'
 
         # TODO: 修改读取的方式，我们的 tiny_train.csv 毕竟和原始代码期望的很不一样
         # 因为还要保存标签，所以只能用 annotation 里的索引文件
@@ -51,7 +51,7 @@ class AV_KS_Dataset(Dataset):
                 label_id = row[-1].replace(' ', '_')
                 name = row[1] + '_' + row[2].zfill(6) + '_' + row[3].zfill(6)
                 if os.path.exists(os.path.join(self.audio_path, name + '.wav' + '.npy')):
-                    self.data.append(name)
+                    self.data.append(name)  # 注意，name 没有包含任何后缀
                     self.label.append(label_id)
 
         # with open(csv_path) as f:
