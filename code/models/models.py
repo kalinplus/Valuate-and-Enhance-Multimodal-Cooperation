@@ -27,8 +27,17 @@ class AVClassifier(nn.Module):
         self.visual_net = resnet18(modality='visual')
 
     def forward(self, audio, visual, drop = None, drop_arg = None):
+        '''
+        变量信息：输入前
+        visual = Tensor(64, 3, 3, 224, 224)
+        audio = Tensor(64, 1, 1024, 128)
+        '''
         visual = visual.permute(0, 2, 1, 3, 4).contiguous()
-        a = self.audio_net(audio)
+        a = self.audio_net(audio)  # 输出 a: Tensor(64, 512, 32, 4)
+        torch.backends.cudnn.enabled = True
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.allow_tf32 = False
         v = self.visual_net(visual)
 
         (_, C, H, W) = v.size()

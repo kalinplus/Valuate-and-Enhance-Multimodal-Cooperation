@@ -8,7 +8,7 @@ import shutil
 import argparse
 
 
-def extract_frames(source_dir, target_dir):
+def extract_frames(source_dir, target_dir, extracted_frames_length=300):
     source_classes = os.listdir(source_dir)
     source_classes.sort()
     if not os.path.exists(target_dir):
@@ -44,18 +44,18 @@ def extract_frames(source_dir, target_dir):
                 video_frames = os.listdir(target_video_frames_folder)
                 video_frames.sort()
 
-                if len(video_frames) == 300:
-                    # exactly 300 frames
+                if len(video_frames) == extracted_frames_length:
+                    # exactly extracted_frames_length frames
                     continue
-                elif len(video_frames) > 300:
-                    # remove frames longer than 300
-                    for i in range(300, len(video_frames)):
+                elif len(video_frames) > extracted_frames_length:
+                    # remove frames longer than extracted_frames_length
+                    for i in range(extracted_frames_length, len(video_frames)):
                         os.remove(os.path.join(target_video_frames_folder, video_frames[i]))
                 else:
-                    # duplicate videos with less than 300 frames
+                    # duplicate videos with less than extracted_frames_length frames
                     last_file = 'frame_%05d.jpg' % (len(video_frames) - 1)
                     last_file = os.path.join(target_video_frames_folder, last_file)
-                    for i in range(len(video_frames), 300 + 1):
+                    for i in range(len(video_frames), extracted_frames_length + 1):
                         new_file = 'frame_%05d.jpg' % i
                         new_file = os.path.join(target_video_frames_folder, new_file)
                         shutil.copyfile(last_file, new_file)
@@ -76,5 +76,5 @@ if __name__ == '__main__':
 
     import time
     tic = time.time()
-    extract_frames(args.source_dir, args.target_dir)
+    extract_frames(args.source_dir, args.target_dir, 30)
     print(time.time() - tic)

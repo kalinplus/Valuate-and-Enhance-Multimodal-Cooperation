@@ -17,6 +17,7 @@ class AV_KS_Dataset(Dataset):
     def __init__(self, mode, transforms=None):
         self.data = []
         self.label = []
+        self.category = []  # 保存类别（字符串），用于拼接视觉数据路径
         # 训练、验证、测试集的数据路径设定
         # train, val, test 的 visual_path 都是相同的，但是 csv_path 不同，对应读取的数据应该也不同
         if mode=='train':
@@ -48,11 +49,13 @@ class AV_KS_Dataset(Dataset):
             next(reader)
             rows = list(reader)
             for i, row in enumerate(rows):
-                label_id = row[-1].replace(' ', '_')
+                cate = row[0].replace(' ', '_')
+                label_id = row[-1]
                 name = row[1] + '_' + row[2].zfill(6) + '_' + row[3].zfill(6)
                 if os.path.exists(os.path.join(self.audio_path, name + '.wav' + '.npy')):
                     self.data.append(name)  # 注意，name 没有包含任何后缀
-                    self.label.append(label_id)
+                    self.label.append(int(label_id))
+                    self.category.append(cate)
 
         # with open(csv_path) as f:
         #     for line in f:
@@ -82,11 +85,11 @@ class AV_KS_Dataset(Dataset):
     def __getitem__(self, idx):
         av_file = self.data[idx]
 
-        spectrogram = np.load(self.audio_path + '/' + av_file + '.npy')
+        spectrogram = np.load(os.path.join(self.audio_path, av_file + ".wav" + ".npy"))
         spectrogram = np.expand_dims(spectrogram, axis=0)
         
         # Visual
-        path = self.visual_path + '/' + av_file
+        path = os.path.join(self.visual_path, self.category[idx], av_file)
         file_num = len([lists for lists in os.listdir(path)])
 
         if self.mode == 'train':
@@ -103,7 +106,7 @@ class AV_KS_Dataset(Dataset):
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
             ])
-        # 对每个样本，从视频中选取 3 个图像帧（随机采样）
+        # 对每个样本，从预提取的图像帧中选取 3 段（随机采样）
         pick_num = 3
         seg = int(file_num / pick_num)
         path1 = []
@@ -121,8 +124,8 @@ class AV_KS_Dataset(Dataset):
                 # 测试时取中间帧
                 t[i] = i*seg + max(int(seg/2), 1) if file_num > 6 else 1
 
-            path1.append('frame_0000' + str(t[i]) + '.jpg')
-            image.append(Image.open(path + "/" + path1[i]).convert('RGB'))
+            path1.append('frame_' + str(t[i]).zfill(5) + '.jpg')
+            image.append(Image.open(os.path.join(path, path1[i])).convert('RGB'))
             # 将多个图像帧变换后进行融合
             image_arr.append(transf(image[i]))
             image_arr[i] = image_arr[i].unsqueeze(1).float()

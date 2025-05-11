@@ -33,9 +33,10 @@ def get_arguments():
     parser.add_argument('--model', default='resnet18', type=str, choices=['resnet18'])
     parser.add_argument('--modulation', default='none', type=str, choices=['none', 'sample', 'modality'])
     parser.add_argument('--compare', default='none', type=str, choices=['none'])
-    parser.add_argument('--batch_size', default=64, type=int)
+    parser.add_argument('--batch_size', default=16, type=int)
     parser.add_argument('--epochs', default=60, type=int)
-    parser.add_argument('--n_classes', default=31, type=int)
+    # parser.add_argument('--n_classes', default=31, type=int)
+    parser.add_argument('--n_classes', default=400, type=int)  # tinyk400 也有 400个标签啊， KS 网上又难找
     parser.add_argument('--encoder_lr_decay', default=1.0, type=float, help='decay coefficient')
     parser.add_argument('--loader', default=158, type=int)
     parser.add_argument('--optimizer', default='adam', type=str, choices=['sgd', 'adam'])
@@ -142,17 +143,17 @@ def main():
   # train_val_dataset = AV_KS_Dataset(mode='train',loader=args.loader)
   # test_dataset = AV_KS_Dataset(mode='test',loader=args.loader)
   train_dataset = AV_KS_Dataset(mode='train')
-  train_val_dataset = AV_KS_Dataset(mode='train')
+  train_val_dataset = AV_KS_Dataset(mode='val')
   test_dataset = AV_KS_Dataset(mode='test')
   
 
   # 加载 dataloader
   train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size,
-                                  shuffle=True, num_workers=16,pin_memory=True)    
+                                  shuffle=True, num_workers=1,pin_memory=False)
   train_val_dataloader = DataLoader(train_val_dataset, batch_size=args.batch_size,
-                                  shuffle=False, num_workers=16,pin_memory=True)                                
+                                  shuffle=False, num_workers=1,pin_memory=False)
   test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size,
-                                 shuffle=False, num_workers=16)
+                                 shuffle=False, num_workers=1, pin_memory=False)
   # 设置优化器
   if args.optimizer == 'sgd':
         optimizer = optim.SGD(model.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=1e-4)
